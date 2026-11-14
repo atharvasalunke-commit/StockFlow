@@ -1,0 +1,6 @@
+.env
+.idea/
+target/
+all_java_code.txt
+*.md
+*.sh
