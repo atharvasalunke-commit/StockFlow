@@ -10,8 +10,8 @@ import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
-import com.stockflow.Service.AuthService;
-import com.stockflow.Service.TokenService;
+import com.stockflow.service.AuthService;
+import com.stockflow.service.TokenService;
 import com.stockflow.dto.LoginRequest;
 import com.stockflow.dto.RegisterRequest;
 import com.stockflow.dto.TokenResponse;

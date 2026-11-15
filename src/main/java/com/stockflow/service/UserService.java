@@ -1,4 +1,4 @@
-package com.stockflow.Service;
+package com.stockflow.service;
 
 import com.stockflow.common.ResourceNotFoundException;
 import com.stockflow.dto.UserResponse;

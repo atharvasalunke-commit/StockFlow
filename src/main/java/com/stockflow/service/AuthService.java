@@ -1,4 +1,4 @@
-package com.stockflow.Service;
+package com.stockflow.service;
 
 import java.util.Locale;
 
@@ -21,7 +21,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
-    // Burns the same CPU time when the email is unknown, so response time doesn't reveal which emails exist.
+    // checked when the email is unknown, so login takes the same time either way
     private final String dummyHash;
 
     public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder,

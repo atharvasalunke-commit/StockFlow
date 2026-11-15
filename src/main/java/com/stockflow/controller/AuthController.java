@@ -1,7 +1,7 @@
 package com.stockflow.controller;
 
 
-import com.stockflow.Service.AuthService;
+import com.stockflow.service.AuthService;
 import com.stockflow.dto.LoginRequest;
 import com.stockflow.dto.RegisterRequest;
 import com.stockflow.dto.TokenResponse;
