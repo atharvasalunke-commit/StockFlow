@@ -2,6 +2,7 @@ package com.stockflow.controller;
 
 import com.stockflow.common.CurrentUser;
 import com.stockflow.dto.AddMemberRequest;
+import com.stockflow.dto.ChangeRoleRequest;
 import com.stockflow.dto.MemberResponse;
 import com.stockflow.dto.OrganizationRequest;
 import com.stockflow.dto.OrganizationResponse;
@@ -11,7 +12,9 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -67,5 +70,21 @@ public class OrganizationController {
                                     @PathVariable Long organizationId,
                                     @Valid @RequestBody AddMemberRequest request) {
         return organizationService.addMember(organizationId, CurrentUser.id(jwt), request);
+    }
+
+    @PatchMapping("/{organizationId}/members/{memberUserId}")
+    public MemberResponse changeRole(@AuthenticationPrincipal Jwt jwt,
+                                     @PathVariable Long organizationId,
+                                     @PathVariable Long memberUserId,
+                                     @Valid @RequestBody ChangeRoleRequest request) {
+        return organizationService.changeRole(organizationId, CurrentUser.id(jwt), memberUserId, request);
+    }
+
+    @DeleteMapping("/{organizationId}/members/{memberUserId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removeMember(@AuthenticationPrincipal Jwt jwt,
+                             @PathVariable Long organizationId,
+                             @PathVariable Long memberUserId) {
+        organizationService.removeMember(organizationId, CurrentUser.id(jwt), memberUserId);
     }
 }

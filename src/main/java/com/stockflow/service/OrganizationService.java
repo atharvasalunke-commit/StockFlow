@@ -4,6 +4,7 @@ import com.stockflow.common.BadRequestException;
 import com.stockflow.common.ConflictException;
 import com.stockflow.common.ResourceNotFoundException;
 import com.stockflow.dto.AddMemberRequest;
+import com.stockflow.dto.ChangeRoleRequest;
 import com.stockflow.dto.MemberResponse;
 import com.stockflow.dto.OrganizationRequest;
 import com.stockflow.dto.OrganizationResponse;
@@ -41,7 +42,6 @@ public class OrganizationService {
         this.userRepository = userRepository;
         this.access = access;
     }
-    // org and owner membership go in one transaction, so we never get an org without an owner
     @Transactional
     public OrganizationResponse create(Long userId, OrganizationRequest request) {
         Organization org = organizationRepository.saveAndFlush(new Organization(request.name().trim(), userId));
@@ -110,12 +110,43 @@ public class OrganizationService {
             throw new ConflictException("User is already a member of this organization");
         }
         try {
-            // the exists check above can race; the UNIQUE constraint is what really stops duplicates
             Membership saved = membershipRepository.saveAndFlush(
                     new Membership(organizationId, target.getId(), request.role()));
             return MemberResponse.of(target, saved);
         } catch (DataIntegrityViolationException e) {
             throw new ConflictException("User is already a member of this organization");
         }
+    }
+
+    @Transactional
+    public MemberResponse changeRole(Long organizationId, Long userId, Long targetUserId,
+                                     ChangeRoleRequest request) {
+        access.requireRole(organizationId, userId, Role.OWNER);
+        if (request.role() == Role.OWNER) {
+            throw new BadRequestException("Role must be ADMIN or STAFF");
+        }
+        Membership target = findMembership(organizationId, targetUserId);
+        if (target.getRole() == Role.OWNER) {
+            throw new ConflictException("The owner's role cannot be changed");
+        }
+        target.changeRole(request.role());
+        User user = userRepository.findById(targetUserId)
+                .orElseThrow(() -> new ResourceNotFoundException("Member not found"));
+        return MemberResponse.of(user, target);
+    }
+
+    @Transactional
+    public void removeMember(Long organizationId, Long userId, Long targetUserId) {
+        access.requireRole(organizationId, userId, Role.OWNER);
+        Membership target = findMembership(organizationId, targetUserId);
+        if (target.getRole() == Role.OWNER) {
+            throw new ConflictException("The owner cannot be removed");
+        }
+        membershipRepository.delete(target);
+    }
+
+    private Membership findMembership(Long organizationId, Long targetUserId) {
+        return membershipRepository.findByOrganizationIdAndUserId(organizationId, targetUserId)
+                .orElseThrow(() -> new ResourceNotFoundException("Member not found"));
     }
 }

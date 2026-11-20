@@ -19,7 +19,6 @@ public class Membership {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // plain ids instead of @ManyToOne, so every query has to name the organization
     @Column(name = "organization_id", nullable = false, updatable = false)
     private Long organizationId;
 
@@ -45,6 +44,10 @@ public class Membership {
     @PrePersist
     void onCreate() {
         this.createdAt = Instant.now();
+    }
+
+    public void changeRole(Role newRole) {
+        this.role = newRole;
     }
 
     public Long getId() { return id; }

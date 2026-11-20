@@ -1,6 +1,5 @@
 package com.stockflow.service;
 
-
 import com.stockflow.config.JwtProperties;
 import java.time.Instant;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;

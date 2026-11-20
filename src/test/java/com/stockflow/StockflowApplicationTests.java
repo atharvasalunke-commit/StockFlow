@@ -1,13 +1,11 @@
 package com.stockflow;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import com.stockflow.integration.AbstractIntegrationTest;
 
-@SpringBootTest
-class StockflowApplicationTests {
+class StockflowApplicationTests extends AbstractIntegrationTest {
 
 	@Test
 	void contextLoads() {
 	}
-
 }

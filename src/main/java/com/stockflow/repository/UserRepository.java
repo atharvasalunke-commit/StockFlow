@@ -1,6 +1,5 @@
 package com.stockflow.repository;
 
-
 import java.util.Optional;
 
 import com.stockflow.entity.User;

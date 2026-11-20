@@ -4,7 +4,6 @@ import com.stockflow.entity.User;
 
 import java.time.Instant;
 
-/** Deliberately has no passwordHash field. */
 public record UserResponse(Long id, String email, String fullName, Instant createdAt) {
 
     public static UserResponse from(User user) {
